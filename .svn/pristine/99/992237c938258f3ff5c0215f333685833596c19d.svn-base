@@ -1,0 +1,31 @@
+#include "framework.h"
+#include "SceneMain.h"
+
+
+CSceneMain::CSceneMain()
+{
+}
+
+CSceneMain::~CSceneMain()
+{
+}
+
+void CSceneMain::Enter()
+{
+}
+
+void CSceneMain::Exit()
+{
+	ClearObject();
+}
+
+int CSceneMain::update()
+{
+	CScene::update();
+	return 0;
+}
+
+void CSceneMain::render(HDC _dc)
+{
+	CScene::render(_dc);
+}

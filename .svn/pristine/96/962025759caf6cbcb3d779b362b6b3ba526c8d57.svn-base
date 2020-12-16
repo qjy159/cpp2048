@@ -1,0 +1,45 @@
+#include "framework.h"
+#include "SceneMain.h"
+#include "ObjectImage.h"
+#include "TexMgr.h"
+#include "SceneMgr.h"
+#include "KeyMgr.h"
+
+
+CSceneMain::CSceneMain()
+	: m_iScore(0)
+{
+}
+
+CSceneMain::~CSceneMain()
+{
+}
+
+void CSceneMain::Enter()
+{
+	// Background (Default Position x = 0 , y = 0)
+	CObjectImage* ObjImage = new CObjectImage;
+	ObjImage->SetLayer(OBJ_LAYER::BACKGROUND);
+	ObjImage->SetTexture(CTexMgr::GetInst()->Load(L"Background2", L"Background2.bmp"));
+	AddObject(ObjImage, OBJ_LAYER::BACKGROUND);
+}
+
+void CSceneMain::Exit()
+{
+	ClearObject();
+}
+
+int CSceneMain::update()
+{
+	CScene::update();
+
+	if (KEYTAB(KEY_TYPE::KEY_ESC))
+		CSceneMgr::GetInst()->ChangeScene(SCENE_TYPE::START);
+
+	return 0;
+}
+
+void CSceneMain::render(HDC _dc)
+{
+	CScene::render(_dc);
+}

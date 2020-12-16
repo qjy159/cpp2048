@@ -1,0 +1,21 @@
+#include "framework.h"
+#include "ObjectBackground.h"
+
+
+CObjectBackground::CObjectBackground()
+{
+}
+
+CObjectBackground::~CObjectBackground()
+{
+}
+
+int CObjectBackground::update()
+{
+	return 0;
+}
+
+void CObjectBackground::render(HDC _dc)
+{
+	CObject::render(_dc);
+}

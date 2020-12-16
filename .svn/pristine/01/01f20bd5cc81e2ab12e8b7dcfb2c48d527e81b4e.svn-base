@@ -1,0 +1,59 @@
+#include "framework.h"
+#include "SceneMgr.h"
+#include "Scene.h"
+#include "SceneStart.h"
+#include "SceneMain.h"
+
+CSceneMgr::CSceneMgr()
+	: m_arrScene{}
+	, m_pCurScene(nullptr)
+{
+}
+
+CSceneMgr::~CSceneMgr()
+{
+	for (UINT i = 0; i < (UINT)SCENE_TYPE::END; ++i)
+	{
+		if (NULL != m_arrScene[i])
+			delete m_arrScene[i];
+	}
+}
+
+void CSceneMgr::init()
+{
+	// 씬 생성
+	m_arrScene[(UINT)SCENE_TYPE::START] = new CSceneStart;
+	m_arrScene[(UINT)SCENE_TYPE::START]->SetSceneType(SCENE_TYPE::START);
+
+	m_arrScene[(UINT)SCENE_TYPE::MAIN] = new CSceneMain;
+	m_arrScene[(UINT)SCENE_TYPE::MAIN]->SetSceneType(SCENE_TYPE::MAIN);
+
+
+	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::START];
+	m_pCurScene->Enter();
+}
+
+void CSceneMgr::ChangeScene(SCENE_TYPE _eType)
+{
+	// 이미 동일한 스테이지 상태인데,
+	if (_eType == m_pCurScene->GetSceneType())
+		return;
+
+	m_pCurScene->Exit();
+	m_pCurScene = m_arrScene[(UINT)_eType];
+	m_pCurScene->Enter();
+}
+
+int CSceneMgr::update()
+{
+	if (nullptr != m_pCurScene)
+		m_pCurScene->update();
+
+	return 0;
+}
+
+void CSceneMgr::render(HDC _dc)
+{
+	if (nullptr != m_pCurScene)
+		m_pCurScene->render(_dc);
+}

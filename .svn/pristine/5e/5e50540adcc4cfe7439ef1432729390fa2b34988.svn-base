@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GameCode">
+      <UniqueIdentifier>{b78d5474-7a6b-4ca2-bbc3-2d8d5c918ed5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameCode\01.Core">
+      <UniqueIdentifier>{3e389e90-bf17-473a-a52e-35ddc1c69ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameCode\00.Header">
+      <UniqueIdentifier>{fdfc7985-9aa7-4024-9a1f-7a4a554364d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameCode\02.Manager">
+      <UniqueIdentifier>{60303e69-86e4-46c4-876f-cc035898eb42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameCode\99.Resource">
+      <UniqueIdentifier>{5c6d2898-8385-4221-8f8a-e7bc1b13008f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{109175ff-20cc-4728-99cc-fe673c42072d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DefaultResource">
+      <UniqueIdentifier>{c387565c-81bc-4f2b-b8ef-0b9726e8ff34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameCode\04.Object">
+      <UniqueIdentifier>{472b66fd-6f50-4edd-a3d7-c64489ac3a6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameCode\03.Scene">
+      <UniqueIdentifier>{812c14d7-1d32-4947-bb87-4f01c1326cd5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="define.h">
+      <Filter>GameCode\00.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="func.h">
+      <Filter>GameCode\00.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="struct.h">
+      <Filter>GameCode\00.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>GameCode\01.Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>GameCode\99.Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyMgr.h">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cpp2048.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>DefaultResource</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="PathMgr.h">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>GameCode\04.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="TexMgr.h">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMgr.h">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>GameCode\03.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneStart.h">
+      <Filter>GameCode\03.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMain.h">
+      <Filter>GameCode\03.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectImage.h">
+      <Filter>GameCode\04.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneRank.h">
+      <Filter>GameCode\03.Scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>DefaultResource</Filter>
+    </Image>
+    <Image Include="cpp2048.ico">
+      <Filter>DefaultResource</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core.cpp">
+      <Filter>GameCode\01.Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>GameCode\99.Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyMgr.cpp">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp2048.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="PathMgr.cpp">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>GameCode\04.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="func.cpp">
+      <Filter>GameCode\00.Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="TexMgr.cpp">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMgr.cpp">
+      <Filter>GameCode\02.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>GameCode\03.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneStart.cpp">
+      <Filter>GameCode\03.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMain.cpp">
+      <Filter>GameCode\03.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectImage.cpp">
+      <Filter>GameCode\04.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneRank.cpp">
+      <Filter>GameCode\03.Scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="cpp2048.rc">
+      <Filter>DefaultResource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

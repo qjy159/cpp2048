@@ -1,0 +1,101 @@
+#include "framework.h"
+#include "Core.h"
+#include "PathMgr.h"
+#include "TimeMgr.h"
+#include "KeyMgr.h"
+#include "TexMgr.h"
+#include "SceneMgr.h"
+
+CCore::CCore()
+	: m_hWnd(NULL)
+	, m_hDC(NULL)
+	, m_bFocus(true)
+	, m_pMemTex(nullptr)
+{
+}
+
+CCore::~CCore()
+{
+	ReleaseDC(m_hWnd, m_hDC);
+}
+
+void CCore::init(HWND _hWnd)
+{
+	// 메인 윈도우 핸들
+	m_hWnd = _hWnd;	
+
+	// 메인 윈도우 DC
+	m_hDC = GetDC(m_hWnd);
+
+	// 툴바를 제외한 실제 해상도 크기 계산
+	ChangeWindowSize(0, 0, 800, 720);
+
+	// 더블버퍼링을 위한 메모리 DC(카피 윈도우 버퍼) 생성
+	m_pMemTex = CTexMgr::GetInst()->CreateTexture(L"MemDCTex", (int)m_vResolution.x, (int)m_vResolution.y);
+
+	// 매니저 객체 초기화
+	CPathMgr::init();
+	CTimeMgr::GetInst()->init();
+	CKeyMgr::GetInst()->init();
+	CSceneMgr::GetInst()->init();
+}
+
+UINT CCore::progress()
+{
+	update();
+	render();
+	return 0;
+}
+
+void CCore::ChangeWindowSize(UINT _iLeft, UINT _iTop, UINT _iWidth, UINT _iHeight, bool _bHasMenu)
+{
+	RECT rt{ 0,	0,	_iWidth, _iHeight };
+	UINT iStyle = GetWindowLong(m_hWnd, GWL_STYLE);
+	AdjustWindowRect(&rt, iStyle, _bHasMenu);
+
+	SetWindowPos(m_hWnd, NULL, _iLeft, _iTop, rt.right - rt.left, rt.bottom - rt.top, 0);
+	ShowWindow(m_hWnd, true);
+
+	m_vResolution.x = (float)_iWidth;
+	m_vResolution.y = (float)_iHeight;
+}
+
+void CCore::ChangeWindowTitle(wstring strTitle)
+{
+	SetWindowTextW(m_hWnd, strTitle.c_str());
+}
+
+int CCore::update()
+{
+	// 현재 창이 활성화 되어있는지
+	HWND hWnd = GetFocus();
+	if (NULL == hWnd)
+		m_bFocus = false;
+	else
+		m_bFocus = true;
+	
+	// Update
+	CTimeMgr::GetInst()->update();
+	CKeyMgr::GetInst()->update();
+	CSceneMgr::GetInst()->update();
+	return 0;
+}
+
+void CCore::render()
+{
+	// MemDC 버퍼 지우기
+	HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 0));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(m_pMemTex->GetDC(), hBrush);
+
+	Rectangle(m_pMemTex->GetDC(), -1, -1, (int)m_vResolution.x + 1, (int)m_vResolution.y + 1);
+
+	SelectObject(m_pMemTex->GetDC(), hOldBrush);
+	DeleteObject(hBrush);
+
+	// Object를 순회하며 각자 자신의 위치를 MemDC에 그린다
+	CSceneMgr::GetInst()->render(m_pMemTex->GetDC());
+	CTimeMgr::GetInst()->render(m_pMemTex->GetDC());
+
+	// 완성된 MemDC를 메인 DC에 옮겨 그린다.(더블 버퍼링)
+	BitBlt(m_hDC, 0, 0, (int)m_vResolution.x, (int)m_vResolution.y, m_pMemTex->GetDC(), 0, 0, SRCCOPY);
+}

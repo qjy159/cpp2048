@@ -1,0 +1,54 @@
+#include "framework.h"
+#include "ObjectGame.h"
+
+
+CObjectGame::CObjectGame()
+	: m_iBoard{}
+{
+}
+
+CObjectGame::~CObjectGame()
+{
+}
+
+void CObjectGame::init()
+{
+    // 최초 숫자 두번 생성
+    CreateNum(2);
+}
+
+int CObjectGame::update()
+{
+	return 0;
+}
+
+void CObjectGame::render(HDC _dc)
+{
+}
+
+void CObjectGame::CreateNum(int count)
+{
+    // num 반복횟수
+    for (int i = 0; i < count; ++i)
+    {
+        UINT* p[16] = { nullptr, };
+        UINT emptycount = 0;
+
+        // 2차원 배열 중 비어있는 보드의 주소만 담음
+        for (int i = 0; i < 4; ++i)
+        {
+            for (int j = 0; j < 4; ++j)
+            {
+                if (0 == m_iBoard[i][j])
+                {
+                    p[emptycount] = &m_iBoard[i][j];
+                    ++emptycount;
+                }
+            }
+        }
+
+        // 90% 확률로 2를, 10% 확률로 4를 선택해
+        // 비어있는 보드중 한 곳에 랜덤으로 생성
+        *p[rand() % emptycount] = (rand() % 100 < 90) ? 2 : 4;
+    }
+}

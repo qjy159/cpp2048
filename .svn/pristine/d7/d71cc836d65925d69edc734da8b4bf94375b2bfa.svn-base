@@ -1,0 +1,27 @@
+#include "framework.h"
+#include "SceneRank.h"
+
+CSceneRank::CSceneRank()
+{
+}
+
+CSceneRank::~CSceneRank()
+{
+}
+
+void CSceneRank::Enter()
+{
+}
+
+void CSceneRank::Exit()
+{
+}
+
+int CSceneRank::update()
+{
+	return 0;
+}
+
+void CSceneRank::render(HDC _dc)
+{
+}

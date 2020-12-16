@@ -1,0 +1,20 @@
+#include "framework.h"
+#include "ObjectImage.h"
+
+CObjectImage::CObjectImage()
+{
+}
+
+CObjectImage::~CObjectImage()
+{
+}
+
+int CObjectImage::update()
+{
+	return 0;
+}
+
+void CObjectImage::render(HDC _dc)
+{
+	CObject::render(_dc);
+}

@@ -1,0 +1,60 @@
+#include "framework.h"
+#include "SceneMain.h"
+#include "ObjectImage.h"
+#include "TexMgr.h"
+#include "SceneMgr.h"
+#include "KeyMgr.h"
+#include "ObjectGame.h"
+
+
+CSceneMain::CSceneMain()
+	: m_pGame(nullptr)
+{
+}
+
+CSceneMain::~CSceneMain()
+{
+}
+
+void CSceneMain::Enter()
+{
+	// Background (Default Position x = 0 , y = 0)
+	CObjectImage* ObjImage = new CObjectImage;
+	ObjImage->SetLayer(OBJ_LAYER::BACKGROUND);
+	ObjImage->SetTexture(CTexMgr::GetInst()->Load(L"Background2", L"Texture\\Background2.bmp"));
+	AddObject(ObjImage, OBJ_LAYER::BACKGROUND);
+
+	m_pGame = new CObjectGame;
+	m_pGame->SetLayer(OBJ_LAYER::MAIN);
+	m_pGame->SetTexture(CTexMgr::GetInst()->Load(L"Board", L"Texture\\Board.bmp")); // board ¹è°æ
+	m_pGame->SetTileTexture(CTexMgr::GetInst()->Load(L"Tile", L"Texture\\Tile.bmp")); // tile 
+	m_pGame->SetPos(Vec2(390.f, 110.f));
+	m_pGame->init();
+	AddObject(m_pGame, OBJ_LAYER::MAIN);
+}
+
+void CSceneMain::Exit()
+{
+	ClearObject();
+}
+
+int CSceneMain::update()
+{
+	CScene::update();
+
+	if (m_pGame->CheckEnd())
+	{
+		m_pGame->GetScore();
+		CSceneMgr::GetInst()->ChangeScene(SCENE_TYPE::RANK);
+	}
+
+	if (KEYTAB(KEY_TYPE::KEY_ESC))
+		CSceneMgr::GetInst()->ChangeScene(SCENE_TYPE::START);
+
+	return 0;
+}
+
+void CSceneMain::render(HDC _dc)
+{
+	CScene::render(_dc);
+}

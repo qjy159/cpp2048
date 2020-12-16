@@ -1,0 +1,41 @@
+#pragma once
+
+class CTexture;
+
+// 실제 게임오브젝트는 이 클래스를 상속하여 만든다.
+// update 함수는 매 프레임마다 들어와 변화량을 계산한다.
+// render 함수는 매 프레임마다 들어와 현재 자신을 그린다.
+class CObject
+{
+protected:
+	Vec2		m_vPos;
+	Vec2		m_vScale;
+	CTexture*	m_pTex;
+	OBJ_LAYER	m_eLayer;
+	bool		m_bBorderLine;
+
+public:
+	// 초기화 함수 필요하면 오버라이딩하여 구현
+	virtual void init() {}
+	// update 함수는 반드시 오버라이딩 해야함(순수가상함수)
+	virtual int update() = 0;
+	// render 함수는 그려야 할 텍스쳐가 있는 오브젝트만 오버라이딩 하여 구현
+	virtual void render(HDC _dc);
+
+public:
+	const Vec2& GetPos() { return m_vPos; }
+	const Vec2& GetScale() { return m_vScale; }
+	OBJ_LAYER GetLayer() { return m_eLayer; }
+	void SetPos(const Vec2& _vPos) { m_vPos = _vPos; }
+	void SetScale(const Vec2& _vScale) { m_vScale = _vScale; }
+	void SetLayer(OBJ_LAYER _eLayer) { m_eLayer = _eLayer; }
+	void BorderLine(bool _bLine) { m_bBorderLine = _bLine; }
+
+	virtual void SetTexture(CTexture* _pTex) { m_pTex = _pTex; }
+	virtual CTexture* GetTexture() { return m_pTex; }
+
+public:
+	CObject();
+	virtual ~CObject();
+};
+

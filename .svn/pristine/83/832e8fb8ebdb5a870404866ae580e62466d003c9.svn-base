@@ -1,0 +1,223 @@
+#include "framework.h"
+#include "SceneMain.h"
+#include "ObjectImage.h"
+#include "TexMgr.h"
+#include "SceneMgr.h"
+#include "KeyMgr.h"
+#include "ObjectGame.h"
+#include "Core.h"
+#include "resource.h"
+#include "PathMgr.h"
+
+
+CSceneMain::CSceneMain()
+	: m_pGame(nullptr)
+	, m_bSave(false)
+{
+}
+
+CSceneMain::~CSceneMain()
+{
+}
+
+void CSceneMain::Enter()
+{
+	// Background (Default Position x = 0 , y = 0)
+	CObjectImage* ObjImage = new CObjectImage;
+	ObjImage->SetLayer(OBJ_LAYER::BACKGROUND);
+	ObjImage->SetTexture(CTexMgr::GetInst()->Load(L"Background2", L"Texture\\Background2.bmp"));
+	AddObject(ObjImage, OBJ_LAYER::BACKGROUND);
+
+	m_pGame = new CObjectGame;
+	m_pGame->SetLayer(OBJ_LAYER::MAIN);
+	m_pGame->SetTexture(CTexMgr::GetInst()->Load(L"Board", L"Texture\\Board.bmp")); // board 배경
+	m_pGame->SetTileTexture(CTexMgr::GetInst()->Load(L"Tile", L"Texture\\Tile.bmp")); // tile 
+	m_pGame->SetPos(Vec2(390.f, 110.f));
+	m_pGame->init();
+	AddObject(m_pGame, OBJ_LAYER::MAIN);
+}
+
+void CSceneMain::Exit()
+{
+	ClearObject();
+}
+
+int CSceneMain::update()
+{
+	CScene::update();
+
+	if (m_pGame->CheckEnd())
+	{
+		if (!m_bSave)
+		{
+			// 저장할 이름 입력 받기
+			SendMessage(CCore::GetInst()->GetMainHWND(), WM_COMMAND, IDD_GAMEEND, 0);
+			m_bSave = true;
+		}
+		else
+		{
+			if (0 != m_strSaveName.size())
+			{
+				// Save파일에 점수 저장하기
+				FileSave();
+			}
+			// Rank Scene 전환
+			CSceneMgr::GetInst()->ChangeScene(SCENE_TYPE::RANK);
+			m_strSaveName = L"";
+			m_bSave = false;
+		}
+	}
+
+	if (KEYTAB(KEY_TYPE::KEY_ESC))
+		CSceneMgr::GetInst()->ChangeScene(SCENE_TYPE::START);
+
+	return 0;
+}
+
+void CSceneMain::render(HDC _dc)
+{
+	CScene::render(_dc);
+}
+
+void CSceneMain::FileSave()
+{
+	// Rank Save 파일 열기
+	//const wchar_t* strPath = CPathMgr::GetSavePath();
+	//std::wifstream fin;
+	//fin.open(strPath, std::ios::in | std::ios::binary);
+	//if (!fin)
+	//{
+	//	MessageBox(CCore::GetInst()->GetMainHWND(), L"File Load Failed", L"Error", MB_OK);
+	//	assert(nullptr);
+	//}
+
+	FILE* pFile = nullptr;
+	_wfopen_s(&pFile, CPathMgr::GetSavePath(), L"rb");
+	assert(pFile);
+
+	// Rank 정보 가져오기
+	RankData Data[10];
+	int count = 0; // 저장된 랭크 갯수
+	for (int i = 0; i < 10; ++i)
+	{
+		//if (fin.eof())
+		//	break;
+		//
+		//// 이름
+		//Data[i].Name = LoadWString(fin);
+		//
+		//// 스코어
+		//fin.read((wchar_t*)&Data[i].Score, 2);
+		//
+		//// 움직인 횟수
+		//fin.read((wchar_t*)&Data[i].MoveCount, 2);
+
+		Data[i].Name = LoadWString(pFile);
+		fread(&Data[i].Score, sizeof(int), 1, pFile);
+		fread(&Data[i].MoveCount, sizeof(int), 1, pFile);
+
+		++count;
+	}
+	fclose(pFile);
+	//fin.close();
+
+	// 불러온 정보와 내 점수 비교해 내 랭킹 구하기
+	RankData myData;
+	myData.Name = m_strSaveName;
+	myData.Score = m_pGame->GetScore();
+	myData.MoveCount = m_pGame->GetMoveCount();
+
+	int Ranking = -1;
+	for (int i = 0; i < 10; ++i)
+	{
+		if (myData.Score > Data[i].Score)
+		{
+			Ranking = i;
+			break;
+		}
+		else if (myData.Score == Data[i].Score)
+		{
+			if (myData.MoveCount > Data[i].MoveCount)
+			{
+				Ranking = i;
+				break;
+			}
+		} 
+	}
+
+	// 순위권에 들지 못함
+	if (0 > Ranking || 10 <= Ranking)
+		return;
+
+	// 내 점수 데이터에 추가
+	RankData temp = Data[Ranking];
+	Data[Ranking] = myData;
+	for (int i = Ranking + 1; i < 10; ++i)
+	{
+		RankData temp2 = Data[i];
+		Data[i] = temp;
+		temp = temp2;
+	}
+
+	// Rank Save 파일 열기
+	//std::wofstream fout;
+	//fout.open(strPath, std::ios::out | std::ios::binary);
+	//if (!fout)
+	//{
+	//	MessageBox(CCore::GetInst()->GetMainHWND(), L"File Load Failed", L"Error", MB_OK);
+	//	assert(nullptr);
+	//}
+
+	pFile = nullptr;
+	_wfopen_s(&pFile, CPathMgr::GetSavePath(), L"wb");
+	assert(pFile);
+
+	// Rank 정보 저장하기
+	for (int i = 0; i < 10; ++i)
+	{
+		//// 이름
+		//SaveWString(Data[i].Name, fout);
+		//
+		//// 스코어
+		//fout.write((const wchar_t*)(&Data[i].Score), 2);
+		//
+		//// 움직인 횟수
+		//fout.write((const wchar_t*)(&Data[i].MoveCount), 2);
+
+		SaveWString(Data[i].Name, pFile);
+		fwrite(&Data[i].Score, sizeof(int), 1, pFile);
+		fwrite(&Data[i].MoveCount, sizeof(int), 1, pFile);
+	}
+	fclose(pFile);
+	//fout.close();
+}
+
+INT_PTR CALLBACK RankName(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+
+			// 저장할 이름 입력 받아오기
+			wchar_t inputName[100];
+			GetDlgItemText(hDlg, IDC_EDIT1, inputName, 100);
+			if (nullptr != inputName)
+				((CSceneMain*)CSceneMgr::GetInst()->GetCurScene())->SetSaveName(inputName);
+
+			return (INT_PTR)TRUE;
+		}
+		else if (LOWORD(wParam) == IDCANCEL || LOWORD(wParam) == IDCANCEL2)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+		}
+		break;
+	}
+	return (INT_PTR)FALSE;
+}

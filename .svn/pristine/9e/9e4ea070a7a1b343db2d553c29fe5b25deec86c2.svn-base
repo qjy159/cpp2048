@@ -1,0 +1,22 @@
+#pragma once
+#include "Object.h"
+
+class CObjectGame :
+    public CObject
+{
+private:
+	UINT m_iBoard[4][4];
+
+public:
+	virtual void init();
+	virtual int update();
+	virtual void render(HDC _dc);
+
+private:
+	void CreateNum(int count = 1);
+
+public:
+	CObjectGame();
+	virtual ~CObjectGame();
+};
+

@@ -1,0 +1,40 @@
+#include "framework.h"
+#include "Object.h"
+#include "Texture.h"
+#include "Camera.h"
+
+CObject::CObject()
+	: m_pTex(nullptr)
+	, m_bBorderLine(false)
+{
+}
+
+CObject::~CObject()
+{
+}
+
+void CObject::render(HDC _dc)
+{
+	if (nullptr != m_pTex)
+	{
+		BitBlt(_dc
+			, (int)m_vPos.x, (int)m_vPos.y
+			, m_pTex->GetWidth(), m_pTex->GetHeight(),
+			m_pTex->GetDC(), 0, 0, SRCCOPY);
+
+		if (m_bBorderLine)
+		{			
+			HPEN hPen = CreatePen(PS_SOLID, 5, RGB(255, 255, 100));
+			HPEN hOldPen = (HPEN)SelectObject(_dc, hPen);
+
+			MoveToEx(_dc, (int)m_vPos.x, (int)m_vPos.y, NULL);
+			LineTo(_dc, (int)(m_vPos.x + m_pTex->GetWidth()), (int)(m_vPos.y));
+			LineTo(_dc, (int)(m_vPos.x + m_pTex->GetWidth()), (int)(m_vPos.y + m_pTex->GetHeight()));
+			LineTo(_dc, (int)(m_vPos.x), (int)(m_vPos.y + m_pTex->GetHeight()));
+			LineTo(_dc, (int)(m_vPos.x), (int)(m_vPos.y));
+
+			SelectObject(_dc, hOldPen);
+			DeleteObject(hPen);
+		}
+	}
+}

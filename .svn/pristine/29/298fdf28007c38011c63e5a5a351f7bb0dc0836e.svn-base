@@ -1,0 +1,14 @@
+#pragma once
+#include "Object.h"
+class CObjectBackground :
+    public CObject
+{
+public:
+	virtual int update();
+	virtual void render(HDC _dc);
+
+public:
+	CObjectBackground();
+	virtual ~CObjectBackground();
+};
+

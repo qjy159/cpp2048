@@ -1,0 +1,44 @@
+#include "framework.h"
+#include "SceneStart.h"
+#include "ObjectBackground.h"
+#include "TexMgr.h"
+#include "Texture.h"
+#include "PathMgr.h"
+#include "KeyMgr.h"
+#include "SceneMgr.h"
+
+CSceneStart::CSceneStart()
+{
+}
+
+CSceneStart::~CSceneStart()
+{
+}
+
+void CSceneStart::Enter()
+{
+	CObjectBackground* ObjBackground = new CObjectBackground;
+	ObjBackground->SetLayer(OBJ_LAYER::BACKGROUND);
+	ObjBackground->SetTexture(CTexMgr::GetInst()->Load(L"Background", L"Background.bmp"));
+	AddObject(ObjBackground, OBJ_LAYER::BACKGROUND);
+}
+
+void CSceneStart::Exit()
+{
+	ClearObject();
+}
+
+int CSceneStart::update()
+{
+	CScene::update();
+
+	if (KEYTAB(KEY_TYPE::KEY_ENTER))
+		CSceneMgr::GetInst()->ChangeScene(SCENE_TYPE::MAIN);
+
+	return 0;
+}
+
+void CSceneStart::render(HDC _dc)
+{
+	CScene::render(_dc);
+}
